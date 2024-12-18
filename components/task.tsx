@@ -1,15 +1,20 @@
-import React from 'react'
+import { useTaskStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
+import { Button } from './ui/button'
 
 export default function Task({
+  id,
   title,
   description,
   status
 }: {
+  id:string,
   title: string
-  description: string
+  description?: string
   status: string
-}) {
+  }) {
+  const dragTask = useTaskStore(state => state.dragTask)
+  const removeTask=useTaskStore(state=>state.removeTask)
   return (
     <div
       className={cn(
@@ -20,18 +25,20 @@ export default function Task({
           'border-2 border-emerald-500': status === 'DONE'
         }
       )}
+      draggable
+      onDrag={()=>dragTask(id)}
     >
       <div>
         <h3 className='font-medium text-gray-700'>{title}</h3>
         <p className='text-sm font-light text-gray-500'>{description}</p>
       </div>
 
-      <button className='cursor-pointer'>
+      <Button className='cursor-pointer bg-red-500/80 h-6 w-4 hover:bg-red-600' onClick={()=>removeTask(id)}>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 0 24 24'
           fill='currentColor'
-          className='h-5 w-5 text-gray-500 hover:text-rose-400'
+          className='h-4 w-4 text-white hover:text-rose-400'
         >
           <path
             fillRule='evenodd'
@@ -39,7 +46,7 @@ export default function Task({
             clipRule='evenodd'
           />
         </svg>
-      </button>
+      </Button>
     </div>
   )
 }
